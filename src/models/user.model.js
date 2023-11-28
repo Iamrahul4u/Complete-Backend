@@ -1,4 +1,4 @@
-import { mongoose, Schema, model, models } from "mongoose";
+import { mongoose, Schema, model } from "mongoose";
 
 const userSchema = new Schema(
   {
@@ -36,9 +36,9 @@ const userSchema = new Schema(
   }
 );
 
-userSchema.pre("save", function (next) {
+userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next;
-  this.password = bcrypt.hash(this.password, 10);
+  this.password = await bcrypt.hash(this.password, 10);
   next();
 });
 userSchema.methods.isPasswordCorrect = async function (password) {
@@ -66,4 +66,4 @@ userSchema.methods.generateRefreshToken = function () {
     { expiresIn: process.env.REFRESH_TOKEN_EXPIRY }
   );
 };
-export const User = models.User || model("User", userSchema);
+export const User = model("User", userSchema);
