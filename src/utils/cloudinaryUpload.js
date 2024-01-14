@@ -5,7 +5,6 @@ cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
-  secure: true,
 });
 
 const uploadCloudinary = async (localPath) => {
@@ -15,6 +14,7 @@ const uploadCloudinary = async (localPath) => {
       resource_type: "auto",
     });
     console.log(`Uploaded to Cloudinary ${response.url}`);
+    fs.unlinkSync(localPath);
     return response;
   } catch (error) {
     fs.unlinkSync(localPath);

@@ -1,5 +1,6 @@
 import { mongoose, Schema, model } from "mongoose";
-
+import bcrypt from "bcrypt";
+import jwt from "json-web-token";
 const userSchema = new Schema(
   {
     username: {
@@ -27,8 +28,8 @@ const userSchema = new Schema(
     coverImage: {
       type: String,
     },
-    phone: { type: String, required: true, unique: true },
-    refreshToken: { type: String, required: true },
+
+    refreshToken: { type: String },
     watchHistory: [{ type: Schema.Types.ObjectId, ref: "Video" }],
   },
   {
@@ -53,7 +54,7 @@ userSchema.methods.generateAccessToken = function () {
       fullName: this.fullName,
       email: this.email,
     },
-    process.env.JWT_SECRET,
+    process.env.ACCESS_WEB_TOKEN,
     { expiresIn: process.env.ACCESS_TOKEN_EXPIRY }
   );
 };
